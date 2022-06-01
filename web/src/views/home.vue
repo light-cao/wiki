@@ -7,10 +7,8 @@
             @click="handleClick"
     >
         <a-menu-item key="welcome">
-            <router-link :to="'/'">
-                <MailOutlined />
-                <span>欢迎</span>
-            </router-link>
+            <MailOutlined />
+            <span>欢迎</span>
         </a-menu-item>
         <a-sub-menu v-for="item in level1" :key="item.id">
             <template v-slot:title>
@@ -26,7 +24,10 @@
     <a-layout-content
             :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-        <a-list item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3 }" :data-source="ebooks">
+        <div class="welcome" v-show="isShowWelcome">
+            <h1>欢迎使用甲蛙知识库</h1>
+        </div>
+        <a-list v-show="!isShowWelcome" item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3 }" :data-source="ebooks">
             <template #renderItem="{ item }">
                 <a-list-item key="item.name">
                     <template #actions>
@@ -77,10 +78,10 @@ export default defineComponent({
      LikeOutlined,
      MessageOutlined,
   },
-    setup() {
+    setup: function () {
         const ebooks = ref();
         // const ebooks1 = reactive({books : []});
-        const level1 =  ref();
+        const level1 = ref();
         let categorys: any;
         /**
          * 查询所有分类
@@ -101,46 +102,57 @@ export default defineComponent({
             });
         };
 
-        const handleClick = () => {
-            console.log("menu click")
-        };
-       const pagination = {
-          onChange: (page: number) => {
-              console.log(page);
-          },
-          pageSize: 3,
-      };
-      const actions: Record<string, string>[] = [
-          { type: 'StarOutlined', text: '156' },
-          { type: 'LikeOutlined', text: '156' },
-          { type: 'MessageOutlined', text: '2' },
-      ];
-      onMounted(()=> {
-        handleQueryCategory();
-        axios.get("/ebook/list", {
-            params:{
-                page: 1,
-                size: 1000
+        const isShowWelcome = ref(true);
+
+        const handleClick = (value: any) => {
+            console.log("menu click", value);
+            if (value.key === 'welcome') {
+                isShowWelcome.value = true;
+            } else {
+                isShowWelcome.value = false;
             }
-        }).then(
-          (response) => {
-            const data = response.data;
-            ebooks.value = data.content.list;
-            // ebooks1.books = data.content;
-          }
-        );
-      });
+        };
+        const pagination = {
+            onChange: (page: number) => {
+                console.log(page);
+            },
+            pageSize: 3,
+        };
+        const actions: Record<string, string>[] = [
+            {type: 'StarOutlined', text: '156'},
+            {type: 'LikeOutlined', text: '156'},
+            {type: 'MessageOutlined', text: '2'},
+        ];
 
-      return {
-        ebooks,
-        // ebooks2 : toRef(ebooks1, "books"),
-         // listData,
-        pagination,
-        actions,
 
-        handleClick,
-        level1,
-      }
+        onMounted(() => {
+            handleQueryCategory();
+            axios.get("/ebook/list", {
+                params: {
+                    page: 1,
+                    size: 1000
+                }
+            }).then(
+                (response) => {
+                    const data = response.data;
+                    ebooks.value = data.content.list;
+                    // ebooks1.books = data.content;
+                }
+            );
+        });
+
+        return {
+            ebooks,
+            // ebooks2 : toRef(ebooks1, "books"),
+            // listData,
+            pagination,
+            actions,
+
+            handleClick,
+            level1,
+
+            isShowWelcome
+        }
     }
 });
 </script>
