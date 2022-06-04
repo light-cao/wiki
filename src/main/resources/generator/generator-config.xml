@@ -47,6 +47,6 @@
         <!--<table tableName="user"/>-->
         <!--<table tableName="demo" domainObjectName="Demo"/>-->
 
-        <table tableName="content"/>
+        <table tableName="user"/>
     </context>
 </generatorConfiguration>
