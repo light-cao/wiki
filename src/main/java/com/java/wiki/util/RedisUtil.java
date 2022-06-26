@@ -3,10 +3,12 @@ package com.java.wiki.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
+@Component
 public class RedisUtil {
     private static final Logger LOG = LoggerFactory.getLogger(RedisUtil.class);
 
