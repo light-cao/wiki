@@ -59,6 +59,7 @@ public class WebSocketServer {
         LOG.error("发生错误", error);
     }
 
+
     /**
      * 群发消息
      */
