@@ -19,7 +19,6 @@ import com.java.wiki.util.RedisUtil;
 import com.java.wiki.util.RequestContext;
 import com.java.wiki.util.SnowFlake;
 import com.java.wiki.websocket.WebSocketServer;
-import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -55,8 +54,8 @@ public class DocService {
     @Resource
     public WsService wsService;
 
-    @Resource
-    public RocketMQTemplate rocketMQTemplate;
+//    @Resource
+//    public RocketMQTemplate rocketMQTemplate;
 
     public List<DocQueryResp> all(Long ebookId) {
         DocExample docExample = new DocExample();
@@ -165,8 +164,8 @@ public class DocService {
         Doc docDb = docMapper.selectByPrimaryKey(id);
         String logId = MDC.get("LOG_ID");
 
-//        wsService.sendInfo("【" + docDb.getName() + "】被点赞！", logId);
-        rocketMQTemplate.convertAndSend("VOTE_TOPIC", "【" + docDb.getName() + "】被点赞！");
+        wsService.sendInfo("【" + docDb.getName() + "】被点赞！", logId);
+//        rocketMQTemplate.convertAndSend("VOTE_TOPIC", "【" + docDb.getName() + "】被点赞！");
     }
 
 
